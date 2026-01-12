@@ -1,0 +1,86 @@
+---
+title: "Microcirculation workshop"
+author: "J. Montomoli"
+date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.width = 10, fig.height = 6)
+
+# List of required packages
+if (!require("tidyverse")) install.packages("tidyverse")
+library("tidyverse")
+
+required_packages <- c(
+  "lubridate",
+  "knitr",
+  "kableExtra",
+  "VIM",
+  "Hmisc",
+  "psych",
+  "stringr",
+  "scales",
+  "googlesheets4",
+  "naniar",
+  "janitor",
+  "readr",
+  "forcats",
+  "hms",
+  "tidytext",
+  "tm",
+  "RColorBrewer",
+  "wordcloud",
+  "tinytex",
+  "patchwork",
+  "haven",
+  "writexl",
+  "survival",     
+  "survminer",   
+  "pROC",         
+  "gridExtra",    
+  "corrplot",    
+  "ggplot2",    
+  "dplyr"        
+)
+
+# Function to check and install missing packages
+install_if_missing <- function(pkg) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg, dependencies = TRUE)
+    library(pkg, character.only = TRUE)
+  }
+}
+
+# Apply the function to all required packages
+invisible(lapply(required_packages, install_if_missing))
+```
+
+```{r data_loading}
+# Sample data structure (replace with actual data loading)
+set.seed(123)
+n_patients <- n_distinct(DB$cart)
+
+# Create sample dataset based on the paper's characteristics
+data <- data.frame(
+  nr = 1:n_patients,
+  doa = rep(1, n_patients),  # Day of admission
+  age = sample(40:85, n_patients, replace = TRUE),
+  sex = sample(c(0, 1), n_patients, replace = TRUE, prob = c(0.34, 0.66)),
+  adm_dg = sample(c("Trauma", "Neurologic", "Respiratory", "Sepsis", "Other"), 
+                  n_patients, replace = TRUE, 
+                  prob = c(0.38, 0.22, 0.11, 0.09, 0.20)),
+  SOFA_n = sample(1:20, n_patients, replace = TRUE),
+  MFIs = runif(n_patients, 1.5, 3.2),
+  albumina = runif(n_patients, 1.5, 4.5),
+  Lattati = runif(n_patients, 0.5, 8.0),
+  death_ICU = sample(c(0, 1), n_patients, replace = TRUE, prob = c(0.78, 0.22)),
+  death_90 = sample(c(0, 1), n_patients, replace = TRUE, prob = c(0.68, 0.32)),
+  followup_ICU = sample(1:30, n_patients, replace = TRUE),
+  followup = sample(1:90, n_patients, replace = TRUE)
+)
+
+# Display data structure
+str(data)
+cat("Total patients with albumin data at ICU admission:", nrow(data))
+```
